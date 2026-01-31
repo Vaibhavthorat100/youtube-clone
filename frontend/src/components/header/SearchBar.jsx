@@ -1,39 +1,56 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearch } from "../../features/video/videoSlice";
+import { MdSearch } from "react-icons/md";
 
 const SearchBar = () => {
   const dispatch = useDispatch();
-  const search = useSelector((state) => state.video.search);
+
+  const appliedSearch = useSelector(
+    (state) => state.video.search
+  );
+
+  const [input, setInput] = useState(appliedSearch);
+
+  const handleChange = (e) => {
+    setInput(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      dispatch(setSearch(input));
+    }
+  };
 
   return (
-    <div className="hidden md:flex items-center w-1/2">
+    <div className="flex w-full max-w-xl">
       <input
         type="text"
-        value={search}
-        onChange={(e) => dispatch(setSearch(e.target.value))}
         placeholder="Search"
+        value={input}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
         className="
-          w-full px-4 py-1.5
-          bg-[#f1f1f1] text-black
-          border border-gray-400
+          flex-1 px-4 py-1.5
+          border border-gray-300
           rounded-l-full
-          outline-none
-          placeholder-gray-600
+          focus:outline-none
+          text-black            /* 🔥 THIS FIXES IT */
+          bg-white
         "
       />
 
-      <button
-        onClick={() => dispatch(setSearch(search))}
+      <div
         className="
-          px-4 py-1.5
-          bg-gray-300 text-black
-          border border-gray-400
+          px-5
+          border border-l-0 border-gray-300
           rounded-r-full
-          hover:bg-gray-400
+          bg-gray-100
+          flex items-center justify-center
         "
       >
-        🔍
-      </button>
+        <MdSearch size={20} className="text-gray-600" />
+      </div>
     </div>
   );
 };

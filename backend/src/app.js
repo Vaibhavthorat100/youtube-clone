@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // routes
 import authRoutes from "./routes/auth.routes.js";
@@ -9,9 +11,19 @@ import commentRoutes from "./routes/comment.routes.js";
 
 const app = express();
 
+// 🔑 ES module __dirname fix
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // middlewares
 app.use(cors());
 app.use(express.json());
+
+// 🔥 STATIC VIDEOS (IMPORTANT FIX)
+app.use(
+  "/videos",
+  express.static(path.join(__dirname, "../public/videos"))
+);
 
 // routes
 app.use("/api/auth", authRoutes);

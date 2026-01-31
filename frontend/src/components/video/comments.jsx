@@ -5,14 +5,11 @@ const Comments = () => {
   const [text, setText] = useState("");
 
   const addComment = () => {
-    if (text.trim() === "") return;
+    if (!text.trim()) return;
 
     setComments([
       ...comments,
-      {
-        id: Date.now(),
-        message: text,
-      },
+      { id: Date.now(), message: text },
     ]);
 
     setText("");
@@ -24,14 +21,13 @@ const Comments = () => {
         Comments
       </h2>
 
-      {/* Add Comment */}
       <div className="flex gap-2">
         <input
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Add a comment..."
-          className="flex-1 px-3 py-2 bg-black border border-gray-700 rounded outline-none"
+          className="flex-1 px-3 py-2 bg-black text-white border border-gray-700 rounded"
         />
 
         <button
@@ -42,12 +38,11 @@ const Comments = () => {
         </button>
       </div>
 
-      {/* Comment List */}
       <div className="mt-4 space-y-2">
         {comments.map((comment) => (
           <div
             key={comment.id}
-            className="px-3 py-2 bg-gray-900 rounded"
+            className="px-3 py-2 bg-gray-900 text-white rounded"
           >
             {comment.message}
           </div>

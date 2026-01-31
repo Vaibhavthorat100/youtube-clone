@@ -1,12 +1,16 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "../features/auth/authSlice";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
-import AuthInput from "../features/auth/AuthInput"; // ✅ FIXED PATH
+import AuthInput from "../features/auth/AuthInput.jsx";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { isLoggedIn, loading, error } = useSelector(
+    (state) => state.auth
+  );
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,17 +18,15 @@ const Login = () => {
   const handleLogin = () => {
     if (!email || !password) return;
 
-    dispatch(
-      login({
-        id: "user01",
-        name: "Vaibhav",
-        email,
-        avatar: "https://i.pravatar.cc/150?img=3",
-      })
-    );
-
-    navigate("/");
+    dispatch(loginUser({ email, password }));
   };
+
+  // login success hone ke baad redirect
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
@@ -36,7 +38,7 @@ const Login = () => {
           </span>
         </div>
 
-        <h1 className="text-xl font-semibold mb-1">
+        <h1 className="text-xl font-semibold mb-1 text-white">
           Sign In
         </h1>
         <p className="text-gray-400 text-sm mb-6">
@@ -57,15 +59,22 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
+        {error && (
+          <p className="text-red-500 text-sm mt-2">
+            {error}
+          </p>
+        )}
+
         <button
           onClick={handleLogin}
-          className="w-full mt-4 py-2 bg-blue-600 rounded hover:bg-blue-700"
+          disabled={loading}
+          className="w-full mt-4 py-2 bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-60"
         >
-          Sign In
+          {loading ? "Signing in..." : "Sign In"}
         </button>
 
         <p className="text-xs text-gray-400 mt-6 text-center">
-          Frontend-only authentication demo
+          Backend connected authentication
         </p>
       </div>
     </div>

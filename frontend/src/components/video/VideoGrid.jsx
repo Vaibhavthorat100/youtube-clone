@@ -8,7 +8,7 @@ const VideoGrid = () => {
     video.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (filteredVideos.length === 0) {
+  if (!filteredVideos || filteredVideos.length === 0) {
     return (
       <div className="p-6 text-gray-500">
         No videos found
@@ -17,9 +17,9 @@ const VideoGrid = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6 bg-white">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
       {filteredVideos.map((video) => (
-        <VideoCard key={video.id} video={video} />
+        <VideoCard key={video._id} video={video} />
       ))}
     </div>
   );
